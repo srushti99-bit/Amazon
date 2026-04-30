@@ -6,8 +6,8 @@ pipeline {
 		stages {
 			stage('checkout') {
 					steps {
-						git url: '',
-						git branch: ''
+						git url: 'https://github.com/srushti99-bit/Amazon.git',
+						git branch: 'main'
 					      }
 					   }
 			stage('compile') {
@@ -35,24 +35,4 @@ pipeline {
 					and you can check for logs: ${WORKSPACE} .
 				 }
 		     }
-
-B
-B
-B
-B
-B
-B
-B
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
-A
 	}
