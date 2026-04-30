@@ -22,16 +22,14 @@ pipeline {
 			}
 		post {
 			success {
-				mail to:'sparkle.devops@gmail.com'
-				subject: 'The build no : ${BUILD_NUMBER} has built successfully.
-				body: 'The build has been successfully built with the job name : ${JOB_NAME}
-					and stored in the workspace : ${WORKSPACE} .
+				mailto:'sparkle.devops@gmail.com'
+				subject: 'The build no : ${BUILD_NUMBER} has built successfully.'
+				body: 'The build has been successfully built with the job name : ${JOB_NAME} and stored in the workspace : ${WORKSPACE} .'
 				 }
 			failure {
-				mail to:'sparkle.devops@gmail.com'
-				subject: 'The build no :${BUILD_NUMBER} has been failed.
-				body: 'The build has been failed with the job name : ${JOB_NAME}
-					and you can check for logs: ${WORKSPACE} .
+				mailto:'sparkle.devops@gmail.com'
+				subject: 'The build no :${BUILD_NUMBER} has been failed.'
+				body: 'The build has been failed with the job name : ${JOB_NAME} and you can check for logs: ${WORKSPACE} .'
 				 }
 		     }
 	}
