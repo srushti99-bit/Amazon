@@ -23,7 +23,7 @@ pipeline {
 		post {
 			success {
 				mail to:'sparkle.devops@gmail.com'
-				subject: 'The build no :${BUILD_NUMBER} has built successfully.
+				subject: 'The build no : ${BUILD_NUMBER} has built successfully.
 				body: 'The build has been successfully built with the job name : ${JOB_NAME}
 					and stored in the workspace : ${WORKSPACE} .
 				 }
