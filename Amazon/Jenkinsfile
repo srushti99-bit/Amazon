@@ -6,7 +6,7 @@ pipeline {
 		stages {
 			stage('checkout') {
 					steps {
-						git url: 'https://github.com/srushti99-bit/Amazon.git', git branch: 'main'
+						git url: 'https://github.com/srushti99-bit/Amazon.git', git branch: ('main')
 					      }
 					   }
 			stage('compile') {
