@@ -1,39 +1,66 @@
 pipeline {
-	agent any
-		triggers {
-			pollSCM('* * * * *')
-			}
-		stages {
-			stage('checkout') {
-					steps {
-						git url:'https://github.com/srushti99-bit/Amazon.git' , git branch{'main'}
-					      }
-					   }
-			stage('compile') {
-					steps {
-						sh 'mvn compile'
-					      }
-				       }
-			stage('build') {
-					steps {
-						sh 'mvn clean install'
-					      }
-				       }
-			}
-		post {
-			success {
-				emailext(
-				to:'sparkle.devops@gmail.com'
-				subject: 'The build no :  has built successfully.'
-				body: 'The build has been successfully built with the job name : ${JOB_NAME} and stored in the workspace : ${WORKSPACE} .'
-						 )
-					}
-			failure {
-				emailext(
-				mailto:'sparkle.devops@gmail.com'
-				subject: 'The build no : has been failed.'
-				body: 'The build has been failed with the job name : ${JOB_NAME} and you can check for logs: ${WORKSPACE} .'
-						)
-					}
-		     }
-	}
+    agent any
+
+    tools {
+        // This must match the name of the Maven version configured in 
+        // Manage Jenkins -> Global Tool Configuration
+        maven 'Maven 3.9' 
+    }
+
+    triggers {
+        // Automatically checks for code changes every minute
+        pollSCM('* * * * *')
+    }
+
+    environment {
+        // You can define a global email variable here for easy updates
+        RECIPENT_EMAIL = 'sparkle.devops@gmail.com'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/srushti99-bit/Amazon.git', branch: 'main'
+            }
+        }
+
+        stage('Build & Compile') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Unit Test') {
+            steps {
+                // If tests fail, the pipeline moves directly to the 'failure' post-block
+                sh 'mvn test'
+            }
+        }
+    }
+
+    post {
+        success {
+            emailext (
+                to: "${env.RECIPENT_EMAIL}",
+                subject: "SUCCESS: Job ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}]",
+                body: """The build was successful!
+                         Job Name: ${env.JOB_NAME}
+                         Build Number: ${env.BUILD_NUMBER}
+                         Workspace: ${env.WORKSPACE}
+                         Check the application here: ${env.BUILD_URL}""",
+                attachLog: true
+            )
+        }
+        failure {
+            emailext (
+                to: "${env.RECIPENT_EMAIL}",
+                subject: "FAILURE: Job ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}]",
+                body: """Attention! The build has failed.
+                         Job Name: ${env.JOB_NAME}
+                         Build Number: ${env.BUILD_NUMBER}
+                         Console Logs: ${env.BUILD_URL}console""",
+                attachLog: true
+            )
+        }
+    }
+}
